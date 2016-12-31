@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="glwlgwx:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="glwlgwx.war">
+      <element id="artifact" artifact-name="glwlgwx:war exploded" />
+    </root>
+  </artifact>
+</component>
