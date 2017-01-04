@@ -47,4 +47,11 @@ public class TLResponse {
 	public void setList(ArrayList<TLNews> list) {
 		this.list = list;
 	}
+
+	public String getMsg(){
+		if (url != null) {
+			return text+"\r\n"+url;
+		}
+		return text;
+	}
 }

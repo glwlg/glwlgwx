@@ -15,6 +15,7 @@ import com.glwlg.utils.Matchers;
 
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,9 +23,10 @@ import java.util.List;
  * Hello world!
  *
  */
-public class WxApi {
+public class WxApi implements Serializable{
 
 	private static final Logger LOGGER = Logger.getLogger(WxApi.class);
+	private static final long serialVersionUID = 1718665295329043477L;
 
 	private String uuid;
 	private int tip = 0;
@@ -121,22 +123,25 @@ public class WxApi {
 			LOGGER.debug("扫描二维码验证失败");
 			return "扫描二维码验证失败";
 		} else {
-			if(code.equals("201")){
-				LOGGER.debug("成功扫描,请在手机上点击确认以登录");
-				tip = 0;
-				return "成功扫描,请在手机上点击确认以登录";
-			} else if(code.equals("200")){
-				LOGGER.debug("正在登录...");
-				String pm = Matchers.match("window.redirect_uri=\"(\\S+?)\";", res);
-				this.redirect_uri = pm + "&fun=new";
-				LOGGER.debug("redirect_uri=%s"+this.redirect_uri);
-				this.base_uri = this.redirect_uri.substring(0, this.redirect_uri.lastIndexOf("/"));
-				LOGGER.debug("base_uri="+this.base_uri);
-			} else if(code.equals("408")){
-				LOGGER.debug("登录超时");
-				return "登录超时";
-			} else {
-				LOGGER.debug("扫描code="+code);
+			switch (code) {
+				case "201":
+					LOGGER.debug("成功扫描,请在手机上点击确认以登录");
+					tip = 0;
+					return "成功扫描,请在手机上点击确认以登录";
+				case "200":
+					LOGGER.debug("正在登录...");
+					String pm = Matchers.match("window.redirect_uri=\"(\\S+?)\";", res);
+					this.redirect_uri = pm + "&fun=new";
+					LOGGER.debug("redirect_uri=%s" + this.redirect_uri);
+					this.base_uri = this.redirect_uri.substring(0, this.redirect_uri.lastIndexOf("/"));
+					LOGGER.debug("base_uri=" + this.base_uri);
+					break;
+				case "408":
+					LOGGER.debug("登录超时");
+					return "登录超时";
+				default:
+					LOGGER.debug("扫描code=" + code);
+					break;
 			}
 		}
 		return code;
@@ -505,18 +510,19 @@ public class WxApi {
 		if ("!".equals(content.substring(0, 1))||"！".equals(content.substring(0, 1))){
 			if("设置".equals(content.substring(1))){
 				setting.setSetMode(true);
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("进入设置模式", fromUserName);
+				webwxsendmsg("当前设置\r\n"+setMsg(), fromUserName);
 				return;
 			}
 			if("设置完成".equals(content.substring(1))){
 				setting.setSetMode(false);
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("设置完成\r\n"+setMsg(), fromUserName);
 				return;
 			}
 		}
 		if (setting.isSetMode()) {
 			if (setMode(content)) {
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("当前设置\r\n"+setMsg(), fromUserName);
 			} else {
 				webwxsendmsg("输入有误", fromUserName);
 			}
@@ -531,18 +537,19 @@ public class WxApi {
 		if ("!".equals(content.substring(0, 1))||"！".equals(content.substring(0, 1))){
 			if("设置".equals(content.substring(1))){
 				setting.setSetMode(true);
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("进入设置模式", fromUserName);
+				webwxsendmsg("当前设置\r\n"+setMsg(), fromUserName);
 				return;
 			}
 			if("设置完成".equals(content.substring(1))){
 				setting.setSetMode(false);
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("设置完成\r\n"+setMsg(), fromUserName);
 				return;
 			}
 		}
 		if (setting.isSetMode()) {
 			if (setMode(content)) {
-				webwxsendmsg(setMsg(), fromUserName);
+				webwxsendmsg("当前设置\r\n"+setMsg(), fromUserName);
 			} else {
 				webwxsendmsg("输入有误", fromUserName);
 			}
@@ -600,7 +607,7 @@ public class WxApi {
 		request.setInfo(msg);
 		request.setUserid(userid);
 		TLResponse response=api.talk(request);
-		return response.getText();
+		return response.getMsg();
 	}
 
 	private String getUserRemarkName(String id) {

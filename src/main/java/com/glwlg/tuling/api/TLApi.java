@@ -16,8 +16,7 @@ public class TLApi {
 	private final static String TLurl = "http://www.tuling123.com/openapi/api";
 
 	public TLResponse talk(TLRequest request) {
-		TLResponse response=new TLResponse();
-		String parm=JSON.toJSONString(request);
+		TLResponse response;
 		HttpRequest http = HttpRequest.post(TLurl, true,
 				"key", key,
 				"info", request.getInfo(),
@@ -32,9 +31,9 @@ public class TLApi {
 	public static void main(String[] args) {
 		TLRequest request=new TLRequest();
 		TLApi api=new TLApi();
-		request.setInfo("今天杭州天气怎么样");
+		request.setInfo("你好");
 		TLResponse response = api.talk(request);
-		System.out.println(response.getText());
+		System.out.println(response.getMsg());
 
 	}
 
