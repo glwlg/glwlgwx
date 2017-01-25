@@ -7,9 +7,9 @@
     <title>index</title>
 </head>
 <body>
-<img src="${request.qrCodePath}" alt="" id="qrCode">
+<img src="${qrCodePath}" alt="" id="qrCode">
 <h id="status"></h>
-<span class="uuid" data-uuid="${request.uuid}" style="display: none"></span>
+<span class="uuid" data-uuid="${uuid}" style="display: none"></span>
 </body>
 <script language="JavaScript" src="js/jquery.js"></script>
 <script language="JavaScript">
