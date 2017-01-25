@@ -2,22 +2,23 @@ package com.glwlg.action;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.glwlg.service.WxService;
 import com.glwlg.utils.ActionResult;
-import com.glwlg.wx.api.WxApi;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.awt.SystemColor.info;
 
 /**
  * @author guoluwei
@@ -34,6 +35,9 @@ import java.util.Map;
 	HttpSession session;
 	protected Logger logger = Logger.getLogger(this.getClass());
 
+	@Autowired
+	private WxService wxService;
+
 	@ModelAttribute
 	public void setReqAndRes(HttpServletRequest request, HttpServletResponse response){
 		this.request = request;
@@ -41,96 +45,46 @@ import java.util.Map;
 		this.session = request.getSession();
 	}
 
-	@RequestMapping("/showQrCode")
-	public String showQrCode() {
+	@RequestMapping("/index")
+	public ModelAndView index() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("/index");
 		ActionResult result = new ActionResult();
 		String path = session.getServletContext().getRealPath("image/");
-		WxApi api = new WxApi();
-		String uuid = api.getUUID();
-		session.setAttribute("api",api);
-		request.setAttribute("haslogin",false);
-		String qrCodeName="QrCode";
-		if (api.showQrCode(path + qrCodeName + ".jpg")) {
-			return "qrCode";
-		} else {
-			return showQrCode();
+		result=wxService.getUUID();
+		if (!result.isSuccess()) {
+			modelAndView.addObject("success", false);
+			return modelAndView;
+		}
+		//添加数据库之前先把信息放在session里
+		String uuid= (String) result.getDataObject();
+
+		result=wxService.showQrCode(uuid,path+uuid+".jpg");
+		if (!result.isSuccess()) {
+			modelAndView.addObject("success", false);
+			return modelAndView;
 		}
 
+		modelAndView.addObject("uuid", uuid);
+		modelAndView.addObject("success", true);
+		modelAndView.addObject("qrCodePath", path+uuid+".jpg");
+
+		return modelAndView;
 	}
+
 	@RequestMapping("/login")
 	public void login(){
 		ActionResult result = new ActionResult();
-		WxApi api = (WxApi) session.getAttribute("api");
-		String status=api.waitForLogin();
-		if ("200".equals(status)) {
-			result.setSuccess(true);
-			responseJson(result);
-		} else {
-			result.setMsg(status);
+		String uuid = request.getParameter("uuid");
+		result = wxService.waitForLogin(uuid);
+		if (result.isSuccess()) {
+			result = wxService.start(uuid);
 			responseJson(result);
 		}
-		session.setAttribute("api",api);
+		result.setDataObject(uuid);
+		responseJson(result);
 	}
 
-	@RequestMapping("/success")
-	public String success(){
-		start();
-		return "success";
-	}
-
-	public String start() {
-		ActionResult result = new ActionResult();
-		Map<String, WxApi> apiMap = (HashMap<String, WxApi>) session.getAttribute("apiMap");
-		if (apiMap == null) {
-			apiMap = new HashMap<String, WxApi>();
-		} else {
-
-		}
-		WxApi api = (WxApi) session.getAttribute("api");
-				if(!api.login()){
-					logger.debug("微信登录失败");
-					return "fail";
-				}
-				String wxuin=api.getUUID();
-				try {
-					WxApi oldapi = apiMap.get(wxuin);
-					if (oldapi != null) {
-						oldapi.loginOut();
-						apiMap.remove(oldapi);
-					}
-				} catch (Exception ignored) {
-
-				}
-				logger.debug("[*] 微信登录成功");
-
-				if(!api.wxInit()){
-					logger.debug("[*] 微信初始化失败");
-					return "fail";
-				}
-
-				logger.debug("[*] 微信初始化成功");
-
-				if(!api.wxStatusNotify()){
-					logger.debug("[*] 开启状态通知失败") ;
-					return "fail";
-				}
-
-				logger.debug("[*] 开启状态通知成功");
-
-				if(!api.getContact()){
-					logger.debug("[*] 获取联系人失败");
-					return "fail";
-				}
-
-				logger.debug("[*] 获取联系人成功");
-				logger.debug("[*] 共有"+api.getContactList().size()+"位联系人");
-
-				// 监听消息
-				api.listenMsgMode();
-				session.setAttribute("api",null);
-				session.setAttribute("apiMap",apiMap);
-		return "start";
-	}
 
 	public void responseJson(Object obj) {
 		PrintWriter out = null;
@@ -153,5 +107,4 @@ import java.util.Map;
 			}
 		}
 	}
-
 }

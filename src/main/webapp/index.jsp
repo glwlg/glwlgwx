@@ -9,7 +9,7 @@
 <body>
 
 <script language="JavaScript">
-    window.location.href = "showQrCode";
+    window.location.href = "index";
 </script>
 
 </body>

@@ -3,16 +3,14 @@ package com.glwlg.wx.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.blade.kit.DateKit;
 import com.blade.kit.StringKit;
 import com.blade.kit.http.HttpRequest;
 import com.glwlg.tuling.api.TLApi;
 import com.glwlg.tuling.api.TLRequest;
 import com.glwlg.tuling.api.TLResponse;
 import com.glwlg.utils.CookieUtil;
-import org.apache.log4j.Logger;
 import com.glwlg.utils.Matchers;
-
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.Serializable;
@@ -28,6 +26,12 @@ public class WxApi implements Serializable{
 	private static final Logger LOGGER = Logger.getLogger(WxApi.class);
 	private static final long serialVersionUID = 1718665295329043477L;
 
+	public WxApi() {
+		System.setProperty("jsse.enableSNIExtension", "false");
+	}
+	public WxApi(String uuid) {
+		this.uuid = uuid;
+	}
 	private String uuid;
 	private int tip = 0;
 	private String base_uri, redirect_uri, webpush_url = "https://webpush.wx.qq.com/cgi-bin/mmwebwx-bin";
@@ -44,8 +48,12 @@ public class WxApi implements Serializable{
 	// 微信特殊账号
 	private List<String> SpecialUsers = Arrays.asList("newsapp", "fmessage", "filehelper", "weibo", "qqmail", "fmessage", "tmessage", "qmessage", "qqsync", "floatbottle", "lbsapp", "shakeapp", "medianote", "qqfriend", "readerapp", "blogapp", "facebookapp", "masssendapp", "meishiapp", "feedsapp", "voip", "blogappweixin", "weixin", "brandsessionholder", "weixinreminder", "wxid_novlwrv3lqwv11", "gh_22b87fa7cb3c", "officialaccounts", "notification_messages", "wxid_novlwrv3lqwv11", "gh_22b87fa7cb3c", "wxitil", "userexperience_alarm", "notification_messages");
 
-	public WxApi() {
-		System.setProperty("jsse.enableSNIExtension", "false");
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	private Setting setting;
@@ -707,14 +715,14 @@ public class WxApi implements Serializable{
 	}
 
 
-	public static void main(String[] args) throws InterruptedException {
+/*	public static void main(String[] args) throws InterruptedException {
 		WxApi app = new WxApi();
 		String uuid = app.getUUID();
 		if(null == uuid){
 			LOGGER.debug("uuid获取失败");
 		} else {
 			LOGGER.debug("获取到uuid为 "+ app.uuid);
-			app.showQrCode("D:/temp.jpg");
+			app.showQrCode();
 			while(!app.waitForLogin().equals("200")){
 				Thread.sleep(2000);
 			}
@@ -752,6 +760,6 @@ public class WxApi implements Serializable{
 			app.listenMsgMode();
 
 		}
-	}
+	}*/
 
 }
