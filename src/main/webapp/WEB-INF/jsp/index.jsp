@@ -7,7 +7,7 @@
     <title>index</title>
 </head>
 <body>
-<img src="${qrCodePath}" alt="" id="qrCode">
+<img src="images/${qrCodePath}" alt="" id="qrCode">
 <h id="status"></h>
 <span class="uuid" data-uuid="${uuid}" style="display: none"></span>
 </body>

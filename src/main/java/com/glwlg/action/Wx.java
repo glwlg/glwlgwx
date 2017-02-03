@@ -50,7 +50,7 @@ import static java.awt.SystemColor.info;
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("/index");
 		ActionResult result = new ActionResult();
-		String path = session.getServletContext().getRealPath("image/");
+		String path = session.getServletContext().getRealPath("images/");
 		result=wxService.getUUID();
 		if (!result.isSuccess()) {
 			modelAndView.addObject("success", false);
@@ -67,7 +67,7 @@ import static java.awt.SystemColor.info;
 
 		modelAndView.addObject("uuid", uuid);
 		modelAndView.addObject("success", true);
-		modelAndView.addObject("qrCodePath", path+uuid+".jpg");
+		modelAndView.addObject("qrCodePath", uuid+".jpg");
 
 		return modelAndView;
 	}
