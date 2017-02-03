@@ -10,7 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.2.12.RELEASE</spring.version>
-    <docker.registry>192.168.3.253:5000/library</docker.registry>
+    <docker.registry>192.168.3.253:5000</docker.registry>
     <tag>v1</tag>
   </properties>
 
@@ -247,7 +247,7 @@
           <encoding>UTF-8</encoding>
           <compilerArguments>
             <verbose/>
-            <bootclasspath>${java.home}\lib\rt.jar</bootclasspath>
+            <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
           </compilerArguments>
         </configuration>
       </plugin>
