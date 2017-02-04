@@ -301,6 +301,7 @@
         <configuration>
           <dockerDirectory>${project.basedir}</dockerDirectory>
           <pushImage>true</pushImage>
+          <serverId>luwei</serverId>
           <imageName>
             ${docker.registry}/${project.artifactId}:${tag}
           </imageName>
