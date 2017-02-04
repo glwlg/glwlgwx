@@ -274,6 +274,13 @@
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>0.4.11</version>
+        <configuration>
+          <dockerDirectory>${project.basedir}</dockerDirectory>
+          <pushImage>true</pushImage>
+          <serverId>luwei</serverId>
+          <registryUrl>https://reg.meiren.com:5000/v2/</registryUrl>
+          <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
+        </configuration>
         <executions>
           <execution>
             <id>build-image</id>
@@ -281,23 +288,6 @@
             <goals>
               <goal>build</goal>
             </goals>
-            <configuration>
-              <serverId>luwei</serverId>
-              <registryUrl>https://reg.meiren.com:5000/v2/</registryUrl>
-              <dockerDirectory>${project.basedir}</dockerDirectory>
-              <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
-            </configuration>
-          </execution>
-          <execution>
-            <id>push-image</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>push</goal>
-            </goals>
-            <configuration>
-              <serverId>luwei</serverId>
-              <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
-            </configuration>
           </execution>
         </executions>
       </plugin>
