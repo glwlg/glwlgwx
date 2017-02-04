@@ -296,7 +296,6 @@
             </goals>
             <configuration>
               <serverId>luwei</serverId>
-              <registryUrl>https://reg.meiren.com:5000/v2/</registryUrl>
               <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
             </configuration>
           </execution>
