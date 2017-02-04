@@ -278,9 +278,10 @@
           <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
           <dockerDirectory>${project.basedir}</dockerDirectory>
           <pushImage>true</pushImage>
+
+          <serverId>luwei</serverId>
           <resources>
             <resource>
-              <serverId>luwei</serverId>
               <directory>${project.build.directory}</directory>
             </resource>
           </resources>
