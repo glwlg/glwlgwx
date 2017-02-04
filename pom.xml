@@ -10,7 +10,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>3.2.12.RELEASE</spring.version>
-    <docker.registry>reg.glwlg.net:5000</docker.registry>
+    <docker.registry>reg.meiren.com:5000</docker.registry>
     <tag>v1</tag>
   </properties>
 
