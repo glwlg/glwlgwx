@@ -283,7 +283,7 @@
             </goals>
             <configuration>
               <serverId>luwei</serverId>
-              <registryUrl>${docker.registry}</registryUrl>
+              <registryUrl>https://reg.meiren.com:5000/v2/</registryUrl>
               <dockerDirectory>${project.basedir}</dockerDirectory>
               <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
             </configuration>
@@ -296,7 +296,7 @@
             </goals>
             <configuration>
               <serverId>luwei</serverId>
-              <registryUrl>${docker.registry}</registryUrl>
+              <registryUrl>https://reg.meiren.com:5000/v2/</registryUrl>
               <imageName>${docker.registry}/${project.artifactId}:${tag}</imageName>
             </configuration>
           </execution>
